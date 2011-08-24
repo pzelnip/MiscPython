@@ -64,10 +64,13 @@ if __name__ == "__main__":
     print x1 is x2  # returns False (is does reference equality always)
     print x1 != x2  # returns False (calls __eq__)
 
+    # if eq is defined, then the in operator works as expected
+    print Foo(10) in [Foo(10)]   # print true
+
     print cmp(Foo(10), Foo(10)) # returns 0
     print cmp(Foo(10), Foo(11)) # returns -1 
     print cmp(Foo(11), Foo(10)) # returns 1 
- 
+
     # sorting of course makes use of the cmp function
     list_of_foos = []
     list_of_foos.append(Foo(5))
@@ -82,3 +85,5 @@ if __name__ == "__main__":
     print "\nAfter sort:"
     for foo in list_of_foos:
         print ("%d, " % foo.val),
+
+    print

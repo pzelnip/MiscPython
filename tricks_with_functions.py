@@ -17,9 +17,10 @@ def gimme_somethin(x):
     print "you gave me " + x
 
 # you can write nested functions
-def outer_fn():
+def outer_fn(x):
     def inner_fn(val):
-        print "got " % val
+        print "got %s" % val
+    inner_fn(x)
     inner_fn(99)
     inner_fn(88)
 
@@ -102,7 +103,7 @@ did_i_get_default(b=88) # prints "a value of 88 was passed for b
 # do partial function application (currying).  This can be done with the
 # partial() routine from functools
 
-def mypow(b, e)
+def mypow(b, e):
     return b ** e 
 
 two_to_the_power = functools.partial(mypow, b=2)

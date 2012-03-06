@@ -3,16 +3,18 @@ One of the philosophies of Python is that "There should be one-- and
 preferably only one --obvious way to do it."
 
 Unfortunately one area where this philosophy seemed to be neglected was in
-iterating over a dictionary, as there's *many* different ways to do it.
+iterating over a dictionary, as there's *many* different ways to do it (though
+this has been addressed in Python 3).
 
-There's three typical approaches (in Python 2.x):
+There's a handful of typical approaches (in Python 2.x):
 
 - using the items() method
 - using the iteritems() method
+- using the viewitems() method
 - iterating over the dictionary directly
 
-This file shows some timing of these approaches, by providing three functions
-which do the same operation over a large dictionary, using these three 
+This file shows some timing of these approaches, by providing functions
+which do the same operation over a large dictionary, using these different 
 mechanisms for iteration.
 '''
 
@@ -24,8 +26,8 @@ def items(mydict):
     copy of the dictionaries keys & values are created whenever it is called.
     Thus, the memory overhead if the dictionary is large is quite significant.
 
-    In Python 3, items() now performs the exact same operation that iteritems()
-    does (uses a generator).
+    In Python 3, items() has been modified to do the same behaviour as the 
+    viewitems() method -- that is, provide a view over the dictionaries items. 
     '''
     total = 0
     for k, v in mydict.items():
@@ -38,11 +40,23 @@ def iteritems(mydict):
     a generator is used, so at any given time only 1 key and value need to be
     in memory for the loop.
 
-    In Python 3, iteritems() was removed (instead the functionality was moved
-    into items())
+    In Python 3, iteritems() was removed. 
     '''
     total = 0
     for k, v in mydict.iteritems():
+        total += k + v
+    return total
+
+def viewitems(mydict):
+    '''
+    Iterate using the viewitems method.  The viewitems() method provides a 
+    dictionary view over the underlying dictionary.  This approach was inspired
+    by the Java Collections Framework.  It shares much of the benefits of 
+    iteritems() (generator-like access), but also supports showing modifications
+    of the underlying dict in the iteration.
+    '''
+    total = 0
+    for k,v in mydict.viewitems():
         total += k + v
     return total
         
@@ -79,10 +93,13 @@ def main():
     print "Using iteritems: %s" % t2.timeit(num_iter)
     t3 = timeit.Timer("justdict(mydict)", "from __main__ import mydict, justdict")
     print "Using justdict: %s" % t3.timeit(num_iter)
+    t4 = timeit.Timer("viewitems(mydict)", "from __main__ import mydict, viewitems")
+    print "Using viewitems: %s" % t4.timeit(num_iter)
     
     print items(mydict)
     print iteritems(mydict)
     print justdict(mydict)
+    print viewitems(mydict)
 
 if __name__ == '__main__':
     main()

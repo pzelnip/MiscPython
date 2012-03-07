@@ -20,7 +20,7 @@ class Foo(object):
         ''' A read-write property ''' 
         return self.__rwval
 
-    @readwriteprop.getter
+    @readwriteprop.setter
     def readwriteprop(self, xin):
         self.__rwval = xin
 
